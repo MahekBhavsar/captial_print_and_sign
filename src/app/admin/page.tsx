@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
-import { MessageSquare, Users, Eye, TrendingUp, Image as ImageIcon, FileText } from "lucide-react";
+import { MessageSquare, Users } from "lucide-react";
 import { collections } from "@/lib/firebase";
 import { getDocs, query, orderBy, limit, onSnapshot } from "firebase/firestore";
 import type { QuoteDocument } from "@/lib/schema";
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({ quotes: 0, portfolio: 0, users: 0, blogs: 0 });
+  const [stats, setStats] = useState({ quotes: 0, users: 0 });
   const [recentQuotes, setRecentQuotes] = useState<QuoteDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,14 +25,10 @@ export default function AdminDashboard() {
 
     // Fetch other stats once
     const fetchStats = async () => {
-      const portfolioSnapshot = await getDocs(collections.portfolio);
-      const blogSnapshot = await getDocs(collections.blogPosts);
       const usersSnapshot = await getDocs(collections.users);
       
       setStats(prev => ({
         ...prev,
-        portfolio: portfolioSnapshot.size,
-        blogs: blogSnapshot.size,
         users: usersSnapshot.size
       }));
     };
@@ -44,8 +40,6 @@ export default function AdminDashboard() {
 
   const statCards = [
     { title: "Total Quotes", value: stats.quotes > 4 ? "5+" : stats.quotes.toString(), icon: <MessageSquare size={24} color="#2D9CDB" />, trend: "Active" },
-    { title: "Portfolio Items", value: stats.portfolio.toString(), icon: <ImageIcon size={24} color="#C2188B" />, trend: "Active" },
-    { title: "Blog Posts", value: stats.blogs.toString(), icon: <FileText size={24} color="#E6A623" />, trend: "Active" },
     { title: "Active Users", value: stats.users.toString(), icon: <Users size={24} color="#10b981" />, trend: "Active" },
   ];
 
@@ -70,7 +64,7 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem" }}>
         <Card className="glass-card" style={{ padding: "1.5rem" }}>
           <h3 style={{ fontFamily: "var(--font-poppins)", fontSize: "1.2rem", marginBottom: "1.5rem" }}>Recent Quote Requests</h3>
           {loading ? (
@@ -114,23 +108,7 @@ export default function AdminDashboard() {
           )}
         </Card>
         
-        <Card className="glass-card" style={{ padding: "1.5rem" }}>
-          <h3 style={{ fontFamily: "var(--font-poppins)", fontSize: "1.2rem", marginBottom: "1.5rem" }}>System Status</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "1rem", background: "rgba(16, 185, 129, 0.05)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
-              <span style={{ fontWeight: 500 }}>Firebase DB</span>
-              <span style={{ color: "#10b981", fontWeight: 600 }}>Connected</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "1rem", background: "rgba(16, 185, 129, 0.05)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
-              <span style={{ fontWeight: 500 }}>Storage</span>
-              <span style={{ color: "#10b981", fontWeight: 600 }}>Operational</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "1rem", background: "rgba(16, 185, 129, 0.05)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
-              <span style={{ fontWeight: 500 }}>Authentication</span>
-              <span style={{ color: "#10b981", fontWeight: 600 }}>Active</span>
-            </div>
-          </div>
-        </Card>
+
       </div>
     </div>
   );

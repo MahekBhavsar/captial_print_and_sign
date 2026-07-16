@@ -59,7 +59,7 @@ export default function InvoiceGenerator() {
   const [companyPhone, setCompanyPhone] = useState("0481 369 018");
   const [companyEmail, setCompanyEmail] = useState("Sales@capitalprintandsign.com.au");
   const [companyWebsite, setCompanyWebsite] = useState("www.capitalprintandsign.com.au");
-  const [companyABN, setCompanyABN] = useState("65 145 853 604");
+  const [companyABN, setCompanyABN] = useState("30 699 226 849");
 
   // Payment Details (Pre-filled)
   const [accountName, setAccountName] = useState("Capital Print and Sign");

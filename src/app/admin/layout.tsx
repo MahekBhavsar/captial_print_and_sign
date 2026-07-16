@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { LayoutDashboard, Image as ImageIcon, MessageSquare, Settings, LogOut, Users, FileText, Briefcase, Receipt } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Settings, LogOut, Users, Briefcase, Receipt } from "lucide-react";
 import styles from "./AdminLayout.module.css";
 import { usePathname, useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
@@ -52,8 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: "/admin", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
     { href: "/admin/quotes", label: "Quote Requests", icon: <MessageSquare size={20} /> },
     { href: "/admin/services", label: "Services", icon: <Briefcase size={20} /> },
-    { href: "/admin/portfolio", label: "Portfolio", icon: <ImageIcon size={20} /> },
-    { href: "/admin/blog", label: "Blog CMS", icon: <FileText size={20} /> },
+
     { href: "/admin/invoice-generator", label: "Invoice Generator", icon: <Receipt size={20} /> },
 
     { href: "/admin/users", label: "Users & Roles", icon: <Users size={20} /> },
