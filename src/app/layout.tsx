@@ -18,14 +18,7 @@ export const metadata: Metadata = {
   title: "Capital Print & Sign | Premium Printing & Signage in Canberra",
   description: "Capital Print & Sign — Canberra's trusted printing & signage experts. Business cards, brochures, banners, vehicle wraps, shopfront signage & custom branding. Quality printing with fast turnaround. We Print. You Shine.",
   keywords: ["Printing Services Canberra", "Signage Canberra", "Vehicle Wraps Canberra", "Business Cards Canberra", "Banner Printing Canberra", "Capital Print and Sign", "Shopfront Signage Canberra", "Custom Branding Canberra"],
-  icons: {
-    icon: [
-      { url: '/favicon-circle.png', sizes: '192x192', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/favicon-circle.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
+
   openGraph: {
     title: "Capital Print & Sign | We Print. You Shine.",
     description: "Capital Print & Sign — Canberra's trusted printing & signage experts. Business cards, brochures, banners, vehicle wraps, shopfront signage & custom branding solutions for Australian businesses.",
