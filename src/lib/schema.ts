@@ -30,6 +30,7 @@ export const QuoteSchema = z.object({
   status: z.enum(["Pending", "Reviewed", "In Progress", "Completed", "Cancelled"]).default("Pending"),
   createdAt: z.date(),
   updatedAt: z.date(),
+  quoteData: z.any().optional(),
 });
 export type QuoteDocument = z.infer<typeof QuoteSchema>;
 

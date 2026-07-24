@@ -343,11 +343,11 @@ export default function InvoiceGenerator() {
       <div className={styles.summarySection}>
         <div className={styles.summaryBox}>
           <div className={styles.summaryRow}>
-            <span>Subtotal</span>
+            <span>Subtotal (excl. GST)</span>
             <span className={styles.summaryValue}>{formatCurrency(subtotal)}</span>
           </div>
           <div className={styles.summaryRow}>
-            <span>Tax (GST 10%)</span>
+            <span>GST (10%)</span>
             <span className={styles.summaryValue}>{formatCurrency(taxAmount)}</span>
           </div>
           <div className={`${styles.summaryRow} ${styles.totalRow}`}>

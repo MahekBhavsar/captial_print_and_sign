@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import styles from './InvoicePreview.module.css';
+import styles from './QuotePreview.module.css';
 import { Mail, Phone, MapPin, Globe, User, Landmark, FileText, Star, Download, Printer } from 'lucide-react';
-import { InvoiceData } from './page';
+import { QuoteData } from './page';
 
-
-interface InvoicePreviewProps {
-  data: InvoiceData;
+interface QuotePreviewProps {
+  data: QuoteData;
   onClose: () => void;
 }
 
-export default function InvoicePreview({ data, onClose }: InvoicePreviewProps) {
+export default function QuotePreview({ data, onClose }: QuotePreviewProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(amount);
   };
@@ -27,7 +26,7 @@ export default function InvoicePreview({ data, onClose }: InvoicePreviewProps) {
     <div className={`${styles.overlay} print-container`}>
       <div className={styles.modal}>
         <div className={styles.modalHeader}>
-          <h2>Invoice Preview</h2>
+          <h2>Quote Preview</h2>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <button 
               onClick={() => window.print()} 
@@ -54,7 +53,7 @@ export default function InvoicePreview({ data, onClose }: InvoicePreviewProps) {
                 <div className={styles.billToSection}>
                    <div className={styles.billToHeader}>
                       <div className={styles.billToIconWrapper}><User size={20} /></div>
-                      <h3>BILL TO:</h3>
+                      <h3>QUOTE TO:</h3>
                    </div>
                    <div className={styles.billToDetails}>
                       <strong>{data.clientName || 'Client Company Name'}</strong>
@@ -72,15 +71,15 @@ export default function InvoicePreview({ data, onClose }: InvoicePreviewProps) {
               {/* Right Column: Company Info */}
               <div className={styles.companyInfoWrapper}>
                 <div className={styles.companyInfo}>
-                  <h1 className={styles.taxInvoiceTitle}>TAX INVOICE</h1>
+                  <h1 className={styles.taxInvoiceTitle}>QUOTE INVOICE</h1>
                   <div className={styles.invoiceMeta}>
                      <div className={styles.metaRow}>
                        <span className={styles.metaLabel}>DATE:</span>
-                       <span className={styles.metaValue}>{data.invoiceDate || 'DD/MM/YYYY'}</span>
+                       <span className={styles.metaValue}>{data.quoteDate || 'DD/MM/YYYY'}</span>
                      </div>
                      <div className={styles.metaRow}>
-                       <span className={styles.metaLabel}>INVOICE #:</span>
-                       <span className={styles.metaValue}>{data.invoiceNumber || '000'}</span>
+                       <span className={styles.metaLabel}>Sr NO.:</span>
+                       <span className={styles.metaValue}>{data.quoteNumber || '000'}</span>
                      </div>
                   </div>
                   
@@ -152,7 +151,7 @@ export default function InvoicePreview({ data, onClose }: InvoicePreviewProps) {
                       <td className={styles.totalsValue}>{formatCurrency(data.taxAmount)}</td>
                     </tr>
                     <tr className={styles.totalDueRow}>
-                      <td className={styles.totalsLabel}>TOTAL DUE</td>
+                      <td className={styles.totalsLabel}>QUOTE TOTAL</td>
                       <td className={styles.totalsValue}>{formatCurrency(data.totalDue)}</td>
                     </tr>
                  </tbody>
@@ -182,12 +181,12 @@ export default function InvoicePreview({ data, onClose }: InvoicePreviewProps) {
                         </tr>
                         <tr>
                           <td>PAYMENT REFERENCE</td>
-                          <td>: INV-{data.invoiceNumber || '000'}</td>
+                          <td>: QUO-{data.quoteNumber || '000'}</td>
                         </tr>
                      </tbody>
                   </table>
                   <div className={styles.bankFooter}>
-                    (Please use invoice number as reference)
+                    (Please use quote number as reference)
                   </div>
                </div>
                

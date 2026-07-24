@@ -5,14 +5,41 @@ import { Card } from "@/components/ui/Card";
 import { collections } from "@/lib/firebase";
 import { getDocs, query, orderBy, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import type { QuoteDocument } from "@/lib/schema";
-import { Search, Eye, Trash2 } from "lucide-react";
+import { Search, Eye, Trash2, FileText } from "lucide-react";
 import { db } from "@/lib/firebase";
+import QuoteBuilder, { LineItem } from "./QuoteBuilder";
+
+export interface QuoteData {
+  quoteDate: string;
+  quoteNumber: string;
+  clientName: string;
+  contactName: string;
+  addressLine1: string;
+  addressLine2: string;
+  phone: string;
+  email: string;
+  companyName: string;
+  companyAddress: string;
+  companyPhone: string;
+  companyEmail: string;
+  companyWebsite: string;
+  companyABN: string;
+  accountName: string;
+  bsb: string;
+  accountNumber: string;
+  paymentTerms: string;
+  items: LineItem[];
+  subtotal: number;
+  taxAmount: number;
+  totalDue: number;
+}
 
 export default function QuotesPage() {
   const [quotes, setQuotes] = useState<QuoteDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedQuote, setSelectedQuote] = useState<QuoteDocument | null>(null);
+  const [selectedQuoteToBuild, setSelectedQuoteToBuild] = useState<QuoteDocument | null>(null);
 
   useEffect(() => {
     fetchQuotes();
@@ -56,18 +83,36 @@ export default function QuotesPage() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "1.8rem", fontFamily: "var(--font-poppins)" }}>Quote Requests</h1>
-        <div style={{ display: "flex", alignItems: "center", background: "#f8fafc", padding: "0.5rem 1rem", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
-          <Search size={18} color="#64748b" style={{ marginRight: "0.5rem" }} />
-          <input
-            type="text"
-            placeholder="Search clients..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="admin-input"
-            style={{ padding: "0.25rem 0.5rem", border: "none", background: "transparent", width: "200px" }}
-          />
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginBottom: "2rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <button 
+            onClick={() => setSelectedQuoteToBuild({ 
+              id: "new", 
+              firstName: "", 
+              lastName: "", 
+              email: "", 
+              phone: "", 
+              serviceRequested: [], 
+              description: "", 
+              status: "Pending",
+              createdAt: new Date(),
+              updatedAt: new Date()
+            })}
+            style={{ background: "#10b981", color: "white", border: "none", padding: "0.6rem 1.2rem", borderRadius: "8px", display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", fontWeight: 500 }}
+          >
+            <FileText size={18} /> Create New Quote
+          </button>
+          <div style={{ display: "flex", alignItems: "center", background: "#f8fafc", padding: "0.5rem 1rem", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+            <Search size={18} color="#64748b" style={{ marginRight: "0.5rem" }} />
+            <input
+              type="text"
+              placeholder="Search clients..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="admin-input"
+              style={{ padding: "0.25rem 0.5rem", border: "none", background: "transparent", width: "200px" }}
+            />
+          </div>
         </div>
       </div>
 
@@ -126,7 +171,10 @@ export default function QuotesPage() {
                         <option value="Cancelled">Cancelled</option>
                       </select>
                     </td>
-                    <td style={{ textAlign: "right" }}>
+                    <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                      <button onClick={() => setSelectedQuoteToBuild(q)} style={{ background: "transparent", border: "none", color: "#10b981", cursor: "pointer", marginRight: "1rem" }} title="Create Quote PDF">
+                        <FileText size={18} />
+                      </button>
                       <button onClick={() => setSelectedQuote(q)} style={{ background: "transparent", border: "none", color: "#2D9CDB", cursor: "pointer", marginRight: "1rem" }} title="View Details">
                         <Eye size={18} />
                       </button>
@@ -172,6 +220,16 @@ export default function QuotesPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {selectedQuoteToBuild && (
+        <QuoteBuilder 
+          quoteReq={selectedQuoteToBuild} 
+          onClose={() => {
+            setSelectedQuoteToBuild(null);
+            fetchQuotes();
+          }} 
+        />
       )}
     </div>
   );
