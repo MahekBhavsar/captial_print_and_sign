@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import type { SettingsDocument } from "@/lib/schema";
 
 const servicesList = [
-  "Flyers & Brochures", "Shopfront Signs", "Business Cards", 
+  "Flyers & Brochures", "Shopfront Signs", "Business Cards",
   "Posters", "Stickers & Labels", "Graphic Design"
 ];
 
@@ -110,7 +110,7 @@ export default function ContactPage() {
               <div className={styles.detailText}>
                 <h3>Call Us</h3>
                 <p><a href={`tel:${settings?.phone?.replace(/\s/g, '') || "0481369018"}`}>{settings?.phone || "0481 369 018"}</a></p>
-                <p>Mon – Fri, 9am – 5pm AEST</p>
+                <p>Mon – Fri, 8am – 5pm AEST</p>
               </div>
             </div>
 
