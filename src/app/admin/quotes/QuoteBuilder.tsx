@@ -10,8 +10,9 @@ import { QuoteData } from "./page";
 export type LineItem = {
   id: string;
   description: string;
-  unitCost: number;
-  quantity: number;
+  details?: string;
+  unitCost: number | string;
+  quantity: number | string;
 };
 
 interface QuoteBuilderProps {
@@ -40,10 +41,11 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
       ? quoteReq.serviceRequested.map((service, index) => ({
           id: index.toString(),
           description: service,
-          unitCost: 0,
+          details: "",
+          unitCost: "",
           quantity: 1
         }))
-      : [{ id: "1", description: "", unitCost: 0, quantity: 1 }])
+      : [{ id: "1", description: "", details: "", unitCost: "", quantity: 1 }])
   );
 
   // Company Details (Pre-filled)
@@ -65,7 +67,7 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
 
   // Calculations
   const calculateSubtotal = () => {
-    return items.reduce((sum, item) => sum + (item.unitCost * item.quantity), 0);
+    return items.reduce((sum, item) => sum + ((Number(item.unitCost) || 0) * (Number(item.quantity) || 0)), 0);
   };
 
   const subtotal = calculateSubtotal();
@@ -75,7 +77,7 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
 
   // Handlers
   const handleAddItem = () => {
-    setItems([...items, { id: Date.now().toString(), description: "", unitCost: 0, quantity: 1 }]);
+    setItems([...items, { id: Date.now().toString(), description: "", details: "", unitCost: "", quantity: 1 }]);
   };
 
   const handleRemoveItem = (id: string) => {
@@ -108,11 +110,28 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSaveQuote = async () => {
+    if (!quoteNumber.trim()) {
+      alert("Please enter a Quote Sr. No.");
+      return;
+    }
+
     setIsSaving(true);
     try {
+      const { collection, addDoc, getDocs, query, where, doc, updateDoc } = await import("firebase/firestore");
+      const { db } = await import("@/lib/firebase");
+
+      // Validate unique quote number
+      const q = query(collection(db, "quotes"), where("quoteData.quoteNumber", "==", quoteNumber));
+      const snapshot = await getDocs(q);
+      
+      const isDuplicate = snapshot.docs.some(d => quoteReq.id === "new" || d.id !== quoteReq.id);
+      if (isDuplicate) {
+        alert("Quote number already exists. Please use a unique Quote Sr. No.");
+        setIsSaving(false);
+        return;
+      }
+
       if (quoteReq.id === "new") {
-        const { collection, addDoc } = await import("firebase/firestore");
-        const { db } = await import("@/lib/firebase");
         await addDoc(collection(db, "quotes"), {
           firstName: contactName.split(' ')[0] || clientName || "Unknown",
           lastName: contactName.split(' ').slice(1).join(' ') || "",
@@ -126,8 +145,6 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
           quoteData
         });
       } else {
-        const { doc, updateDoc } = await import("firebase/firestore");
-        const { db } = await import("@/lib/firebase");
         const quoteRef = doc(db, "quotes", quoteReq.id!);
         await updateDoc(quoteRef, { quoteData, updatedAt: new Date() });
       }
@@ -264,7 +281,8 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
             <table className={styles.itemsTable}>
               <thead>
                 <tr>
-                  <th className={styles.itemDesc}>Item Description</th>
+                  <th className={styles.itemDesc}>Items</th>
+                  <th className={styles.itemDetails}>Description</th>
                   <th className={styles.itemNumber}>Unit Cost ($)</th>
                   <th className={styles.itemNumber}>Quantity</th>
                   <th className={styles.itemTotal}>Line Total</th>
@@ -280,7 +298,16 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
                         className={styles.input} 
                         value={item.description}
                         onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
-                        placeholder="Item description..."
+                        placeholder="Item..."
+                      />
+                    </td>
+                    <td>
+                      <textarea 
+                        className={styles.textarea} 
+                        value={item.details || ''}
+                        onChange={(e) => handleItemChange(item.id, 'details', e.target.value)}
+                        placeholder="Description..."
+                        style={{ minHeight: '60px' }}
                       />
                     </td>
                     <td>
@@ -288,7 +315,7 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
                         type="number" 
                         className={styles.input} 
                         value={item.unitCost}
-                        onChange={(e) => handleItemChange(item.id, 'unitCost', parseFloat(e.target.value) || 0)}
+                        onChange={(e) => handleItemChange(item.id, 'unitCost', e.target.value === '' ? '' : parseFloat(e.target.value))}
                         min="0"
                         step="0.01"
                       />
@@ -298,12 +325,12 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
                         type="number" 
                         className={styles.input} 
                         value={item.quantity}
-                        onChange={(e) => handleItemChange(item.id, 'quantity', parseInt(e.target.value) || 0)}
+                        onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value === '' ? '' : parseInt(e.target.value))}
                         min="1"
                       />
                     </td>
                     <td className={styles.itemTotal}>
-                      {formatCurrency(item.unitCost * item.quantity)}
+                      {formatCurrency((Number(item.unitCost) || 0) * (Number(item.quantity) || 0))}
                     </td>
                     <td>
                       <button 

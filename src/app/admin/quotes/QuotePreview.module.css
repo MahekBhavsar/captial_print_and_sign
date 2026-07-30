@@ -268,7 +268,8 @@
   text-align: center;
 }
 
-.itemsTable th.colItem {
+.itemsTable th.colItem,
+.itemsTable th.colDesc {
   text-align: left;
 }
 

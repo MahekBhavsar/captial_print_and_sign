@@ -159,13 +159,19 @@
   vertical-align: top;
 }
 
-.itemsTable .input {
+.itemsTable .input,
+.itemsTable .textarea {
   width: 100%;
   margin-bottom: 0;
+  box-sizing: border-box;
 }
 
 .itemDesc {
-  width: 40%;
+  width: 20%;
+}
+
+.itemDetails {
+  width: 30%;
 }
 
 .itemNumber {

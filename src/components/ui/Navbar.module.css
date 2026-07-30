@@ -338,22 +338,31 @@
   }
 
   .logoMain {
-    font-size: 1.4rem;
+    font-size: 1.7rem;
+  }
+
+  .logo img {
+    width: 150px !important;
+    height: auto !important;
+  }
+
+  .logoText {
+    margin-left: -1rem;
   }
 }
 
 @media (max-width: 480px) {
   .logo img {
-    width: 100px !important;
+    width: 80px !important;
     height: auto !important;
   }
 
   .logoText {
-    margin-left: -0.5rem;
+    margin-left: 0rem;
   }
 
   .logoMain {
-    font-size: 1.05rem;
+    font-size: 1.6rem;
   }
 
   .logoTag {
