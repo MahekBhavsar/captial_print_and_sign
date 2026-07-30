@@ -128,16 +128,6 @@ export default function QuotePreview({ data, onClose }: QuotePreviewProps) {
                     <td>{formatCurrency((Number(item.unitCost) || 0) * (Number(item.quantity) || 0))}</td>
                   </tr>
                 ))}
-                {/* Fill empty rows to make it look like paper */}
-                {Array.from({ length: Math.max(0, 5 - data.items.length) }).map((_, i) => (
-                  <tr key={`empty-${i}`}>
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                ))}
               </tbody>
             </table>
 
@@ -161,6 +151,8 @@ export default function QuotePreview({ data, onClose }: QuotePreviewProps) {
               </table>
             </div>
 
+            {/* Grouping Bottom Section and Footer to lock to bottom */}
+            <div className={styles.bottomGroup}>
             {/* Payment Details */}
             <div className={styles.bottomSection}>
                <div className={styles.bankDetails}>
@@ -218,6 +210,7 @@ export default function QuotePreview({ data, onClose }: QuotePreviewProps) {
                <div className={styles.footerRight}>
                   <span>We print, You shine.</span>
                </div>
+            </div>
             </div>
           </div>
         </div>
