@@ -57,7 +57,7 @@ export default function QuoteBuilder({ quoteReq, onClose }: QuoteBuilderProps) {
   const [companyABN, setCompanyABN] = useState("30 699 226 849");
 
   // Payment Details (Pre-filled)
-  const [accountName, setAccountName] = useState("Capital Print and Sign");
+  const [accountName, setAccountName] = useState("Eternal Pty Ltd");
   const [bsb, setBsb] = useState("062 915");
   const [accountNumber, setAccountNumber] = useState("10508894");
   const [paymentTerms, setPaymentTerms] = useState("This quote is valid for 30 days.\n\nThank you for considering us!\nWe look forward to working with you.");
